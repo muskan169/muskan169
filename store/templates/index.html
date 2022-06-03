@@ -1,0 +1,56 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row mt-5">
+    {% for product in products %}
+
+    <div class="card mx auto mb-3" style="width: 18rem;">
+      <img src="{{product.image.url}}" class="card-img-top" height="300px" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">{{product.name}}</h5>
+        <p class="card-text"><b>{{product.price}}</b></p>
+        <a href="{% url 'cart_add' product.id %}"><button type="button" class="btn btn-primary">Add To Cart</button></a>
+        <a href="{% url 'item_increment' product.id %}"><button type="button" class="btn btn-primary">+</button></a>
+        <a href="{% url 'item_decrement' product.id %}"><button type="button" class="btn btn-primary">-</button></a>
+        <a href="{% url 'user_wishlist' product.id %}"><button type="button" class="btn btn-primary">❤</button></a>
+       
+        
+        
+       
+
+
+        
+        
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if products.has_previous %}
+    <li class="page-item"><a class="page-link" href="/?page={{products.has_previous}}">Previous</a></li>
+    {% endif %}
+    <li class="page-item"><a class="page-link" href="/?page=1">1</a></li>
+    <li class="page-item"><a class="page-link" href="/?page=2">2</a></li>
+    <li class="page-item"><a class="page-link" href="/?page=3">3</a></li>
+    <li class="page-item"><a class="page-link" href="/?page=4">4</a></li>
+    {% if products.has_next %}
+    <li class="page-item"><a class="page-link" href="/?page={{products.has_next_page_number}}">Next</a></li>
+    {% endif %}
+
+  </ul>
+</nav>
+
+
+
+{% endblock %} 
+
+
+
+ 
+

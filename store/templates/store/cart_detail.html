@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load cart_tag %}
+{% block content %}
+Total item : {{request.session.cart|length}}
+
+
+{% for key,value in request.session.cart.items %}
+    <img src="{{value.image}}" width="120" height="100"><br>
+    item name :{{value.name}}<br>
+    price :{{value.price}} <br>
+    quantity: {{value.quantity}}  <br>
+    Total {{ value.price|multiply:value.quantity }} <br>
+    <a href="{% url 'item_increment' value.product_id %}"><button type="button" class="btn btn-primary">+</button></a>
+    <a href="{% url 'item_decrement' value.product_id   %}"><button type="button" class="btn btn-primary">-</button></a>
+    
+{% endfor %}
+
+<a href="{% url 'cart_clear' %}"<button type="button" class="btn btn-primary">clear cart</button></a>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  checkout
+</button>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+             <a href="{% url 'payment' %}">Check Out Form</a> 
+          </h5>
+          <hr>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="m-2 p-3">
+            <form action="/payment/" method="POST">
+                {% csrf_token %}
+                {{form|crispy}}
+                  <input type="submit" class="btn float-right btn-outline-info col-lg-6" value="Check out">
+            </form>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+         
+   {% comment %} razorpay  {% endcomment %}
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    var options = {
+        "key": "rzp_test_my6CN4Y2BYkoU2", // Enter the Key ID generated from the Dashboard
+        "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "E shop",
+        "description": "purchases",
+        "image": "https://example.com/your_logo",
+        "order_id": "order_DBJOWzybf0sJbb", //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+        "handler": function (response){
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature)
+        },
+        
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+
+
+
+
+{% endblock %}
+

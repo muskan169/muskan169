@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% for x,y in result.items %}
+
+
+<center>
+  <table cellspacing="15px" cellpadding="15px">
+    <tr>
+      <th style="color:brown">{{forloop.counter}}</th>
+      <th>user</th>
+      <th>order</th>
+      <th>product</th>
+      <th>quantity</th>
+      <th>Status</th>
+    </tr>
+
+
+    {% for row in y %}
+    <tr>
+      <td></td>
+      <td>{{row.user}}</td>
+      <td>{{row.product.name}}</td>
+      <td>{{row.product.price}}</td>
+
+      <td>{{row.quantity}}</td>
+      <td>{{row.order.status}}</td>
+    </tr>
+
+  {% endfor %}
+
+  </table>
+    <h4>Total: {{x.price}} </h4>
+
+</center>
+{% endfor %}
+
+{% endblock %}
