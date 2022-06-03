@@ -1,0 +1,14 @@
+#my-test:
+#    image: blogapp
+version: '3.8'
+
+services:
+
+  web:
+    build: .
+    image: eshop
+    command: python3 manage.py runserver 0.0.0.0:8000
+    tty: true
+    ports:
+      - "8000:8000"
+      
